@@ -12,11 +12,16 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+
     <script src="script/handledata.js"></script>
     <script src="script/app.js"></script>
   </head>
   <body>
-    <div class="c-collection">
+    <div class="c-collection js-page">
       <div class="c-head">
         <input
           class="c-search"
@@ -24,10 +29,23 @@
           placeholder="Search for a country, currency or language"
         />
       </div>
+      <div class="c-continents">
+        <button><div class="c-continents__item">All</div></button>
+        <button><div class="c-continents__item">Africa</div></button>
+        <button><div class="c-continents__item">America</div></button>
+        <button><div class="c-continents__item">Asia</div></button>
+        <button><div class="c-continents__item">Europe</div></button>
+        <button><div class="c-continents__item">Oceania</div></button>
+      </div>
       <div class="c-container">
         <div class="canvas js-canvas">
           <div class="cell cell--1 js-cell"></div>
         </div>
+      </div>
+    </div>
+    <div class="c-popup js-popup">
+      <div class="c-popup-content js-popup-content">
+        <span class="material-icons c-close js-close">close</span>
       </div>
     </div>
   </body>
