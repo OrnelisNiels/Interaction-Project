@@ -19,10 +19,6 @@ const calculatePopulationSubRegion = function (jsonObject) {
 
 const calculatePopulationRegion = function (jsonObject) {
   globalRegionCounter = 0;
-  console.log(
-    '############################RESET###############',
-    globalRegionCounter
-  );
   for (let land of jsonObject) {
     globalRegionCounter = globalRegionCounter + land.population;
   }
@@ -149,7 +145,7 @@ const showLand = function (jsonObject) {
 
   html += `<div class="u-x-span-2"><p class="c-land-name"><b>${jsonObject[0].name.common}</b></p></div>`;
   html += `<div class="c-content-cell"><p class="">Capital: <b>${jsonObject[0].capital}</b></p></div>`;
-  html += `<div class="c-content-cell u-y-span-5"><div id="chart_div"></div></div>`;
+  html += `<div class="c-content-cell u-y-span-5"><div id="chart_div" class="c-chart"></div></div>`;
   html += `<div class="c-content-cell"><p class="">Population: <b>${new Intl.NumberFormat(
     'de-DE'
   ).format(jsonObject[0].population)}</b></p></div>`;
@@ -163,6 +159,8 @@ const showLand = function (jsonObject) {
   htmlPopupContent.innerHTML = html;
 
   listenToClose();
+  // google.charts.load('current', { packages: ['corechart', 'bar'] });
+  // google.charts.setOnLoadCallback(drawBasic);
   google.charts.load('current', { packages: ['corechart', 'bar'] });
   google.charts.setOnLoadCallback(drawBasic);
 };
@@ -299,18 +297,20 @@ function drawBasic() {
   console.log(globalCountryCounter);
   var data = google.visualization.arrayToDataTable([
     ['Global', 'Population'],
-    ['Global', globalWorldPopulation],
+    // ['Global', globalWorldPopulation],
     [`${globalRegion}`, globalRegionCounter],
     [`${globalSubRegion}`, globalSubRegionCounter],
     [`${globalCountryName}`, globalCountryCounter],
   ]);
-
+  // var columnRange = data.getColumnRange(0);
   var options = {
     title: `Population of ${globalCountryName} vs global population`,
-    chartArea: { width: '50%' },
+    chartArea: { width: '55%' },
     hAxis: {
       title: 'Total Population',
-      minValue: 0,
+      // viewWindow: {
+      //   min: columnRange.min,
+      // },
     },
     vAxis: {
       title: 'Country',
@@ -323,7 +323,6 @@ function drawBasic() {
 
   chart.draw(data, options);
 }
-
 const init = function () {
   console.log('DOM geladen');
   getData();
