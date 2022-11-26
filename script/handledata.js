@@ -14,9 +14,7 @@ const handleData = function (
   })
     .then(function (response) {
       if (!response.ok) {
-        console.warn(
-          `>> Probleem bij de fetch(). Statuscode: ${response.status}`
-        );
+        console.warn(`>> Probleem bij de fetch(). Statuscode: ${url.status}`);
         if (callbackErrorFunctionName) {
           console.warn(
             `>> Callback errorfunctie ${callbackErrorFunctionName.name}(response) wordt opgeroepen`

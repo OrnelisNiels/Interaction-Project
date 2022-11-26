@@ -4,6 +4,7 @@
     --yellow: #F5CA41;
     --blue: #1521A7;
     --dark: #212427;
+    --accent-color: #2badad;
 
     --background-color: whitesmoke;
 
@@ -80,12 +81,72 @@ body {
 .c-head{
     margin: 88px 0px;
 }
-.c-search{
-    height: 50px;
-    width: 500px;
-    font-size: 20px;
+
+.c-search-container{
+    position: relative;
+   border: 2px solid var(--dark);
+   height: 50px;
+   display: flex;
+    align-items: center;
     border-radius: 10px;
 }
+
+
+.c-search{
+    height: 50px;
+    width: 480px;
+    font-size: 20px;
+    border-radius: 10px;
+    /* position: relative; */
+    border: none;
+    background-color: transparent;
+}
+
+input.c-search:focus{
+    outline: none;
+}
+
+.c-search__icon{
+    /* position: absolute; */
+    top: center;
+    right: center;
+    /* transform: translateY(-50%); */
+    color: var(--dark);
+}
+
+.material-icons.md-40 {
+    font-size: 40px;
+    top: center;
+    right: center;
+    /* transform: translateY(-50%); */
+    /* color: var(--accent-color) */
+}
+
+.material-icons.md-40:hover {
+    color: var(--accent-color);
+}
+
+button.c-btn{
+    padding: 0px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+button.c-btn:hover{
+    /* border: none;
+    border-radius: 0px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out; */
+    background-color: transparent;
+}
+
+button.c-btn:focus{
+    border-radius: 0px;
+    outline: none;
+    background-color: transparent;
+}
+
 .c-container{
     margin: 0px;
     /* min-height: 100vh; */
@@ -127,10 +188,8 @@ body {
     position: relative;
 }
 
-.cell:hover{
-    transform: scale(1.05);
-    /* box-shadow: 0 0 4px rgba(43, 173, 173, 0.5), 0 4px 8px rgba(43, 173, 173, 0.5) */
-}
+
+
 
 .flag{
     /* position: absolute; */
@@ -217,6 +276,18 @@ body {
     margin-right: 5px;
 }
 
+.c-counter{
+    line-height: 22px;
+    position: absolute;
+    left: 12vw;
+}
+
+button.c-btn-continent:focus{
+    outline: none;
+    color: white;
+    background-color:var(--accent-color);
+}
+
 button{
     border: none;
     padding: 2px 10px;
@@ -224,11 +295,13 @@ button{
     cursor: pointer;
     font-size: inherit;
     border-radius: 50px;
+    font-family: 'Montserrat', sans-serif;
 }
 button:hover{
-    background-color: #2badad;
+    background-color: var(--accent-color);;
     color:white;
 }
+
 
 
 .c-btn-cell{
@@ -236,9 +309,16 @@ button:hover{
     padding: 0px;
 }
 
-.c-btn-cell:hover{
+
+button.c-btn-cell:hover {
+    transform: scale(1.05);
     background-color: transparent;
     color: var(--dark);
+}
+
+button.c-btn-cell:focus{
+    transform: scale(1.05);
+    outline: none;
 }
 .u-x-span-2{
     grid-column: span 2;
@@ -246,6 +326,10 @@ button:hover{
 
 .u-x-span-1{
     grid-column: span 1;
+}
+
+.u-y-span-5 {
+    grid-row: span 5;
 }
 
 .u-height-width-small{
@@ -258,6 +342,6 @@ button:hover{
 }
 
 .u-is-selected{
-    background-color: #2badad;
+    background-color: var(--accent-color);;
     color: white;
 }

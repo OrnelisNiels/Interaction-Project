@@ -16,38 +16,47 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
-
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
     <script src="script/handledata.js"></script>
     <script src="script/app.js"></script>
   </head>
   <body>
     <div class="c-collection js-page">
       <div class="c-head">
-        <input
-          class="c-search"
-          type="text"
-          placeholder="Search for a country, currency or language"
-        />
+        <div class="c-search-container">
+          <input
+            class="c-search js-search"
+            type="text"
+            placeholder="Search for a country, currency or language"
+          />
+          <button class="c-btn js-search-btn">
+            <span class="material-icons md-40 c-search__icon"> search </span>
+          </button>
+        </div>
       </div>
       <div class="c-continents">
-        <button class="u-is-selected js-filter" filter="all">
+        <button class="c-btn-continent u-is-selected js-filter" filter="all">
           <div class="c-continents__item">All</div>
         </button>
-        <button class="js-filter" filter="africa">
+        <button class="c-btn-continent js-filter" filter="africa">
           <div class="c-continents__item">Africa</div>
         </button>
-        <button class="js-filter" filter="america">
+        <button class="c-btn-continent js-filter" filter="america">
           <div class="c-continents__item">America</div>
         </button>
-        <button class="js-filter" filter="asia">
+        <button class="c-btn-continent js-filter" filter="asia">
           <div class="c-continents__item">Asia</div>
         </button>
-        <button class="js-filter" filter="europe">
+        <button class="c-btn-continent js-filter" filter="europe">
           <div class="c-continents__item">Europe</div>
         </button>
-        <button class="js-filter" filter="oceania">
+        <button class="c-btn-continent js-filter" filter="oceania">
           <div class="c-continents__item">Oceania</div>
         </button>
+        <div class="c-counter js-counter">Count</div>
       </div>
       <div class="c-container">
         <div class="canvas js-canvas">
