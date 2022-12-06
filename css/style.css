@@ -326,6 +326,242 @@ button.c-btn-cell:focus{
     transform: scale(1.05);
     outline: none;
 }
+
+
+@media (min-width: 320px) {
+    .c-container {
+            width: 100vw;
+            height: 72vh;
+        }
+
+     .c-head{
+        margin: 50px 0px;
+     }    
+
+     .flag{
+        position: absolute;
+        top: 20px;
+        right: 20px;
+     }
+    .c-search
+    {
+        width: 100%;
+        font-size: 16px;
+    }
+    .c-search-container {
+        width: 80vw;
+    }
+
+    .material-icons.md-40 {
+        font-size: 30px;
+    }
+
+    .c-head-container{
+        width: 80%;
+    }
+    .c-continents{
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .cell{
+        width: 80vw;
+        height: 180px;
+    }
+
+    .c-cellText{
+        font-size: 20px;
+    }
+
+    .c-cellText--sub{
+        font-size: 12px;
+    }
+
+    .canvas {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+    }
+
+
+    .c-counter {
+        left: 13rem;
+        display: none;
+    }
+
+    .c-chart {
+        height: 108%;
+    }
+
+
+    .c-popup-content {
+        width: 90vw;
+        height: 80vh;
+        background-color: white;
+        border-radius: 10px;
+        text-align: center;
+        padding: 10px;
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        margin: 10px 20px;
+
+    }
+
+    .c-close {
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+}
+
+@media (min-width: 450px) {
+    .canvas {
+            grid-template-columns: 1fr 1fr;
+        }
+
+    .c-search-container {
+        width: 60vw;
+    }
+    .cell {
+        width: 40vw;
+    }
+}
+
+@media (min-width: 576px) {
+    .canvas {
+    }
+
+    .cell {
+
+    }
+}
+
+@media (min-width: 768px) {
+    .canvas {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    .c-search-container {
+        width: 45vw;
+    }
+
+    .flag{
+        top: 15px;
+    }
+    .c-cellText--sub{
+        bottom: 20px;
+    }
+
+    .cell {
+        width: 25vw;
+    }
+}
+
+@media (min-width: 992px) {
+    .canvas {
+
+    }
+
+    .c-cellText--sub{
+        bottom: 30px;
+    }
+
+    .c-cellText {
+        font-size: 22px;
+    }
+    
+}
+
+@media (min-width: 1200px) {
+    .c-container{
+        width: 95vw;
+        height: 70vh;
+    }
+    .c-search-container {
+        width: 40vw;
+    }
+    .c-head{
+        margin: 88px 0px;
+    }
+
+    .canvas {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+
+    }
+    .cell {
+        width: 20vw;
+    }
+    .c-counter {
+        left: 8vw;
+        display: block;
+    }
+
+    .c-chart {
+        height: 108%;
+    }
+}
+
+@media (min-width: 1600px) {
+    .c-container {
+        width: 85vw;
+        height: 72vh;
+    }
+
+    .canvas {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+    }
+
+    .c-search-container {
+        width: 35vw;
+    }
+
+    .c-search {
+        font-size: 20px;
+    }
+    
+    .material-icons.md-40 {
+        font-size: 40px;
+    }
+
+    .cell {
+        width: 300px;
+        height: 200px;
+    }
+    .c-counter {
+        left: 13rem;
+    }
+
+    .c-chart {
+        height: 108%;
+    }
+
+    .c-popup {
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        position: absolute;
+        top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        display: none;
+    }
+
+    .c-popup-content {
+        width: 50vw;
+        height: 40vh;
+        background-color: white;
+        border-radius: 10px;
+        text-align: center;
+        padding: 10px;
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        margin: 10px 20px;
+
+    }
+}
+
 .u-x-span-2{
     grid-column: span 2;
 }
