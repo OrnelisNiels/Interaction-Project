@@ -91,6 +91,14 @@ body {
     border-radius: 10px;
 }
 
+.c-search-container:hover {
+    transform: scale(1.01);
+    border: 2px solid var(--accent-color);
+}
+
+.c-search-container::selection {
+    --dark: red;
+}
 
 .c-search{
     height: 50px;
@@ -265,9 +273,12 @@ button.c-btn:focus{
 
 .c-content-cell {
     display: flex;
-    margin: 10px;
+    /* margin: 10px; */
     align-items: center; 
+    overflow: auto;
+
 }
+
 
 .c-chart{
     width: 100%;
@@ -394,7 +405,7 @@ button.c-btn-cell:focus{
 
     .c-popup-content {
         width: 90vw;
-        height: 80vh;
+        height: 50vh;
         background-color: white;
         border-radius: 10px;
         text-align: center;
@@ -411,6 +422,10 @@ button.c-btn-cell:focus{
         position: absolute;
         top: 20px;
         right: 20px;
+    }
+
+    .c-klein {
+        display: none;
     }
 }
 
@@ -454,6 +469,15 @@ button.c-btn-cell:focus{
     .cell {
         width: 25vw;
     }
+    .c-popup {
+        width: 100%;
+        height: 100%;      
+    }
+
+    .c-popup-content {
+        width: 60vw;
+        height: 45vh;
+    }
 }
 
 @media (min-width: 992px) {
@@ -468,7 +492,18 @@ button.c-btn-cell:focus{
     .c-cellText {
         font-size: 22px;
     }
-    
+    .c-popup {
+        width: 100%;
+        height: 100%;
+    }
+
+    .c-popup-content {
+        width: 60vw;
+        height: 45vh;
+    }
+    .myChart{
+        height: 5vh;
+    }
 }
 
 @media (min-width: 1200px) {
@@ -497,6 +532,36 @@ button.c-btn-cell:focus{
 
     .c-chart {
         height: 108%;
+    }
+
+    .c-popup {
+        width: 100%;
+        height: 100%;
+    }
+
+    .c-popup-content {
+        width: 60vw;
+        height: 45vh;
+    }
+    .c-klein {
+        display: flex;
+    }
+    .c-popupTitle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .c-line-title{
+        border-top: 4px solid var(--accent-color);
+        width: 3vw;
+        margin: 0 10px;
+    }
+
+    .c-line-right{
+        margin-right: 5px;
+        border-right: 3px solid var(--accent-color);
+        height: 1vw;
     }
 }
 
@@ -538,27 +603,18 @@ button.c-btn-cell:focus{
     .c-popup {
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        position: absolute;
-        top: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        display: none;
     }
 
     .c-popup-content {
         width: 50vw;
-        height: 40vh;
-        background-color: white;
-        border-radius: 10px;
-        text-align: center;
-        padding: 10px;
-        position: relative;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        margin: 10px 20px;
+        height: 45vh;
+    }
 
+    .myChart {
+        height: 25vh;
+    }
+    .c-popupTitle{
+        display: flex;
     }
 }
 
@@ -574,6 +630,10 @@ button.c-btn-cell:focus{
     grid-row: span 6;
 }
 
+.u-y-span-2{
+    grid-row: span 2;
+}
+
 .u-height-width-small{
     width: 40px;
     height: 18px;
@@ -581,6 +641,18 @@ button.c-btn-cell:focus{
 
 .u-center{
     text-align: center;
+}
+
+.u-end{
+    justify-content: flex-end;
+}
+
+.u-justify-center{
+    justify-content: center;
+}
+
+.u-width{
+    width: 300px;
 }
 
 .u-is-selected{

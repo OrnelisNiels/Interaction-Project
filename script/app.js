@@ -8,6 +8,8 @@ let globalRegionCounter = 0;
 let globalSubRegionCounter = 0;
 let globalCountryCounter = 0;
 let globalWorldPopulation = 0;
+let showGraph = false;
+let chart;
 
 const calculatePopulationSubRegion = function (jsonObject) {
   globalSubRegionCounter = 0;
@@ -17,12 +19,16 @@ const calculatePopulationSubRegion = function (jsonObject) {
   console.log(globalSubRegionCounter);
 };
 
-const calculatePopulationRegion = function (jsonObject) {
+const calculatePopulationRegion = function (jsonObject, region) {
   globalRegionCounter = 0;
   for (let land of jsonObject) {
     globalRegionCounter = globalRegionCounter + land.population;
   }
   console.log(globalRegionCounter);
+  showGraph = true;
+  if (showGraph == true) {
+    drawChart();
+  }
 };
 
 const showCounter = function () {
@@ -47,6 +53,9 @@ const showFilteredLanden = function (jsonObject) {
     });
 
     for (let land of jsonObject) {
+      if (land.subregion == null) {
+        land.subregion = 'No subregion';
+      }
       html += `<button class="c-btn-cell"><div class="cell cell--${teller} js-cell" name="${land.name.common}"><p class="c-cellText">${land.name.common}<p><img class="flag" src="${land.flags.png}" alt="Flag of ${land.name.common}"><p class="c-cellText--sub">${land.subregion}</p></div></button>`;
       htmlPng = `url('${land.flags.png}')">`;
       globalCellCounter = globalCellCounter + 1;
@@ -99,6 +108,9 @@ const showFilteredLandenByContinent = function (jsonObject) {
     });
 
     for (let land of jsonObject) {
+      if (land.subregion == null) {
+        land.subregion = 'No subregion';
+      }
       html += `<button class="c-btn-cell"><div class="cell cell--${teller} js-cell" name="${land.name.common}"><p class="c-cellText">${land.name.common}<p><img class="flag" src="${land.flags.png}" alt="Flag of ${land.name.common}"><p class="c-cellText--sub">${land.subregion}</p></div></button>`;
       htmlPng = `url('${land.flags.png}')">`;
       teller += 1;
@@ -117,22 +129,32 @@ const showFilteredLandenByContinent = function (jsonObject) {
 };
 
 const showLand = function (jsonObject) {
+  if (jsonObject[0].subregion != null) {
+    getPopulationSubRegion(jsonObject[0].subregion);
+  }
   getPopulationRegion(jsonObject[0].region);
-  getPopulationSubRegion(jsonObject[0].subregion);
   htmlPopup = document.querySelector('.js-popup');
   htmlPopupContent = document.querySelector('.js-popup-content');
   htmlPopup.style.display = 'flex';
   let html = '';
   let languages = '';
   let currencies = '';
-  for (const [key, value] of Object.entries(jsonObject[0].languages)) {
-    languages += `${value} / `;
-    // console.log(languages);
-  }
 
-  for (const [key, value] of Object.entries(jsonObject[0].currencies)) {
-    // console.log(value);
-    currencies += `${value.name} (${value.symbol}) `;
+  if (jsonObject[0].languages == null) {
+    languages = 'No languages found';
+  } else {
+    for (const [key, value] of Object.entries(jsonObject[0].languages)) {
+      languages += `${value} / `;
+      // console.log(languages);
+    }
+  }
+  if (jsonObject[0].currencies == null) {
+    currencies = 'No currencies found';
+  } else {
+    for (const [key, value] of Object.entries(jsonObject[0].currencies)) {
+      // console.log(value);
+      currencies += `${value.name} (${value.symbol}) `;
+    }
   }
 
   globalCountryName = jsonObject[0].name.common;
@@ -143,26 +165,48 @@ const showLand = function (jsonObject) {
   // globalSubRegionCounter = 0;
   globalCountryCounter = jsonObject[0].population;
 
-  html += `<div class="u-x-span-2"><p class="c-land-name"><b>${jsonObject[0].name.common}</b></p></div>`;
-  html += `<div class="c-content-cell"><p class="">Capital: <b>${jsonObject[0].capital}</b></p></div>`;
-  html += `<div class="c-content-cell u-y-span-5"><div id="chart_div" class="c-chart"></div></div>`;
-  html += `<div class="c-content-cell"><p class="">Population: <b>${new Intl.NumberFormat(
-    'de-DE'
-  ).format(jsonObject[0].population)}</b></p></div>`;
-  html += `<div class="c-content-cell"></div>`;
-  html += `<div class="c-content-cell"><p class="">Languages: <b>${languages}</b></p></div>`;
-  html += `<div class="c-content-cell"></div>`;
-  html += `<div class="c-content-cell"><p class="">Currencies: <b>${currencies}</b></p></div>`;
+  var h = window.innerWidth;
+  if (h >= 1200) {
+    console.log('GROOOOOOOOOOOOOOOOT');
+    html += `<div class="c-popupTitle u-x-span-2 c-content"><div class="c-line-title"></div><p class="c-land-name"><b>${jsonObject[0].name.common}</b></p><div class="c-line-title"></div></div>`;
+    if (jsonObject[0].capital == null) {
+      jsonObject[0].capital = 'No capital';
+    }
+    html += `<div class="c-content-cell"><div class="c-line-right"></div><p class="">Capital: <b>${jsonObject[0].capital}</b></p></div>`;
+    html += `<div class="c-content-cell u-y-span-5 js-chartText"><canvas class="myChart"></canvas></div></div>`;
+    html += `<div class="c-content-cell"><div class="c-line-right"></div><p class="">Population: <b>${new Intl.NumberFormat(
+      'de-DE'
+    ).format(jsonObject[0].population)}</b></p></div>`;
+    // html += `<div class="c-content-cell"></div>`;
+    html += `<div class="c-content-cell u-y-span-2"><div class="c-line-right"></div><p class="">Languages: <b>${languages}</b></p></div>`;
+    // html += `<div class="c-content-cell"></div>`;
+    html += `<div class="c-content-cell"><div class="c-line-right"></div><p class="">Currencies: <b>${currencies}</b></p></div>`;
 
-  html += `<span class="material-icons c-close js-close">close</span>`;
+    html += `<span class="material-icons c-close js-close">close</span>`;
+  } else {
+    console.log('klein');
+    html += `<div class="u-x-span-2"><p class="c-land-name"><b>${jsonObject[0].name.common}</b></p></div>`;
+    if (jsonObject[0].capital == null) {
+      jsonObject[0].capital = 'No capital';
+    }
+    html += `<div class="c-content-cell"><p class="">Capital: <b>${jsonObject[0].capital}</b></p></div>`;
+    html += `<div class="c-content-cell u-end"><p class="">Population: <b>${new Intl.NumberFormat(
+      'de-DE'
+    ).format(jsonObject[0].population)}</b></p></div>`;
+    // html += `<div class="c-content-cell"></div>`;
+    html += `<div class="c-content-cell"><p class="">Languages: <b>${languages}</b></p></div>`;
+    // html += `<div class="c-content-cell"></div>`;
+    html += `<div class="c-content-cell u-end"><p class="">Currencies: <b>${currencies}</b></p></div>`;
+    html += `<div class="c-content-cell u-justify-center u-x-span-2 js-chartText"><canvas class="myChart"></canvas></div></div>`;
+
+    html += `<span class="material-icons c-close js-close">close</span>`;
+  }
 
   htmlPopupContent.innerHTML = html;
 
   listenToClose();
   // google.charts.load('current', { packages: ['corechart', 'bar'] });
   // google.charts.setOnLoadCallback(drawBasic);
-  google.charts.load('current', { packages: ['corechart', 'bar'] });
-  google.charts.setOnLoadCallback(drawBasic);
 };
 
 const showData = function (jsonObject) {
@@ -182,6 +226,9 @@ const showData = function (jsonObject) {
     });
 
     for (let land of jsonObject) {
+      if (land.subregion == null) {
+        land.subregion = 'No subregion';
+      }
       html += `<button class="c-btn-cell"><div class="cell cell--${teller} js-cell" name="${land.name.common}"><p class="c-cellText">${land.name.common}<p><img class="flag" src="${land.flags.png}" alt="Flag of ${land.name.common}"><p class="c-cellText--sub">${land.subregion}</p></div></button>`;
       htmlPng = `url('${land.flags.png}')">`;
       globalCellCounter = globalCellCounter + 1;
@@ -293,36 +340,142 @@ const getData = function () {
   handleData(url, showData);
 };
 
-function drawBasic() {
-  console.log(globalCountryCounter);
-  var data = google.visualization.arrayToDataTable([
-    ['Global', 'Population'],
-    // ['Global', globalWorldPopulation],
-    [`${globalRegion}`, globalRegionCounter],
-    [`${globalSubRegion}`, globalSubRegionCounter],
-    [`${globalCountryName}`, globalCountryCounter],
-  ]);
-  // var columnRange = data.getColumnRange(0);
-  var options = {
-    title: `Population of ${globalCountryName} vs global population`,
-    chartArea: { width: '55%' },
-    hAxis: {
-      title: 'Total Population',
-      // viewWindow: {
-      //   min: columnRange.min,
-      // },
-    },
-    vAxis: {
-      title: 'Country',
-    },
-  };
+// function drawBasic() {
+//   console.log(globalCountryCounter);
+//   // if (globalCountryCounter > 1000000000) {
+//   //   var data = google.visualization.arrayToDataTable([
+//   //     ['Global', 'Population'],
+//   //     ['Global', globalWorldPopulation],
+//   //     [`${globalRegion}`, globalRegionCounter],
+//   //     [`${globalSubRegion}`, globalSubRegionCounter],
+//   //     [`${globalCountryName}`, globalCountryCounter],
+//   //   ]);
+//   // } else {
+//   //   var data = google.visualization.arrayToDataTable([
+//   //     ['Global', 'Population'],
+//   //     // ['Global', globalWorldPopulation],
+//   //     [`${globalRegion}`, globalRegionCounter],
+//   //     [`${globalSubRegion}`, globalSubRegionCounter],
+//   //     [`${globalCountryName}`, globalCountryCounter],
+//   //   ]);
+//   // }
+//   // // var columnRange = data.getColumnRange(0);
+//   // var options = {
+//   //   title: `Population of ${globalCountryName} vs global population`,
+//   //   chartArea: { width: '55%' },
+//   //   hAxis: {
+//   //     title: 'Total Population',
+//   //     // viewWindow: {
+//   //     //   min: columnRange.min,
+//   //     // },
+//   //   },
+//   //   vAxis: {
+//   //     title: 'Country',
+//   //   },
+//   // };
 
-  var chart = new google.visualization.BarChart(
-    document.getElementById('chart_div')
-  );
+//   // var chart = new google.visualization.BarChart(
+//   //   document.getElementById('chart_div')
+//   // );
 
-  chart.draw(data, options);
-}
+//   var data = google.visualization.arrayToDataTable([
+//     ['Task', 'Hours per Day'],
+//     // ['Work', 11],
+//     [`${globalRegion}`, globalRegionCounter],
+//     [`${globalSubRegion}`, globalSubRegionCounter],
+//     [`${globalCountryName}`, globalCountryCounter],
+//   ]);
+
+//   var options = {
+//     title: 'My Daily Activities',
+//   };
+
+//   var chart = new google.visualization.PieChart(
+//     document.getElementById('chart_div')
+//   );
+
+//   chart.draw(data, options);
+// }
+
+const drawChart = function () {
+  const ctx = document.querySelector('.myChart');
+  const ctxText = document.querySelector('.js-chartText');
+  console.log(globalSubRegion);
+  if (globalSubRegion != undefined) {
+    if (globalCountryCounter > 300000000) {
+      chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: [
+            `${globalCountryName}`,
+            `${globalSubRegion}`,
+            `${globalRegion}`,
+            `Global population`,
+          ],
+          datasets: [
+            {
+              label: 'Population',
+              data: [
+                globalCountryCounter,
+                globalSubRegionCounter,
+                globalRegionCounter,
+                globalWorldPopulation,
+              ],
+              borderWidth: 1,
+              backgroundColor: 'rgba(43,	173,	173, 0.5)',
+            },
+          ],
+        },
+      });
+    } else if (globalCountryName.split(' ').length > 2) {
+      chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: [`Country`, `${globalSubRegion}`, `${globalRegion}`],
+          datasets: [
+            {
+              label: 'Population',
+              data: [
+                globalCountryCounter,
+                globalSubRegionCounter,
+                globalRegionCounter,
+              ],
+              borderWidth: 1,
+              minBarLength: 3,
+              backgroundColor: 'rgba(43,	173,	173, 0.5)',
+            },
+          ],
+        },
+      });
+    } else {
+      chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: [
+            `${globalCountryName}`,
+            `${globalSubRegion}`,
+            `${globalRegion}`,
+          ],
+          datasets: [
+            {
+              label: 'Population',
+              data: [
+                globalCountryCounter,
+                globalSubRegionCounter,
+                globalRegionCounter,
+              ],
+              borderWidth: 1,
+              minBarLength: 3,
+              backgroundColor: 'rgba(43,	173,	173, 0.5)',
+            },
+          ],
+        },
+      });
+    }
+  } else {
+    ctxText.innerHTML = 'No data available';
+  }
+};
 const init = function () {
   console.log('DOM geladen');
   getData();
