@@ -252,6 +252,9 @@ button.c-btn:focus{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     margin: 10px 20px;
+    opacity: 0;
+    transform: scale(0);
+    transition: .2s ease opacity, .2s ease transform;
 
 }
 
@@ -276,7 +279,7 @@ button.c-btn:focus{
     /* margin: 10px; */
     align-items: center; 
     overflow: auto;
-
+    min-height: 90px;
 }
 
 
@@ -561,7 +564,7 @@ button.c-btn-cell:focus{
     .c-line-right{
         margin-right: 5px;
         border-right: 3px solid var(--accent-color);
-        height: 1vw;
+        height: 1rem;
     }
 }
 
@@ -658,4 +661,12 @@ button.c-btn-cell:focus{
 .u-is-selected{
     background-color: var(--accent-color);;
     color: white;
+}
+
+.u-textParagraphStart{
+    text-align: start;
+}
+
+.u-textParagraphEnd{
+    text-align: end;
 }

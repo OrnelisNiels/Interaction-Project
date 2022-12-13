@@ -136,6 +136,10 @@ const showLand = function (jsonObject) {
   htmlPopup = document.querySelector('.js-popup');
   htmlPopupContent = document.querySelector('.js-popup-content');
   htmlPopup.style.display = 'flex';
+  window.setTimeout(function () {
+    htmlPopupContent.style.opacity = 1;
+    htmlPopupContent.style.transform = 'scale(1)';
+  }, 100);
   let html = '';
   let languages = '';
   let currencies = '';
@@ -172,15 +176,15 @@ const showLand = function (jsonObject) {
     if (jsonObject[0].capital == null) {
       jsonObject[0].capital = 'No capital';
     }
-    html += `<div class="c-content-cell"><div class="c-line-right"></div><p class="">Capital: <b>${jsonObject[0].capital}</b></p></div>`;
+    html += `<div class="c-content-cell"><div class="c-line-right"></div><p class="u-textParagraphStart">Capital: <b>${jsonObject[0].capital}</b></p></div>`;
     html += `<div class="c-content-cell u-y-span-5 js-chartText"><canvas class="myChart"></canvas></div></div>`;
-    html += `<div class="c-content-cell"><div class="c-line-right"></div><p class="">Population: <b>${new Intl.NumberFormat(
+    html += `<div class="c-content-cell"><div class="c-line-right"></div><p class="u-textParagraphStart">Population: <b>${new Intl.NumberFormat(
       'de-DE'
     ).format(jsonObject[0].population)}</b></p></div>`;
     // html += `<div class="c-content-cell"></div>`;
-    html += `<div class="c-content-cell u-y-span-2"><div class="c-line-right"></div><p class="">Languages: <b>${languages}</b></p></div>`;
+    html += `<div class="c-content-cell u-y-span-2"><div class="c-line-right"></div><p class="u-textParagraphStart">Languages: <b>${languages}</b></p></div>`;
     // html += `<div class="c-content-cell"></div>`;
-    html += `<div class="c-content-cell"><div class="c-line-right"></div><p class="">Currencies: <b>${currencies}</b></p></div>`;
+    html += `<div class="c-content-cell"><div class="c-line-right"></div><p class="u-textParagraphStart">Currencies: <b>${currencies}</b></p></div>`;
 
     html += `<span class="material-icons c-close js-close">close</span>`;
   } else {
@@ -189,20 +193,45 @@ const showLand = function (jsonObject) {
     if (jsonObject[0].capital == null) {
       jsonObject[0].capital = 'No capital';
     }
-    html += `<div class="c-content-cell"><p class="">Capital: <b>${jsonObject[0].capital}</b></p></div>`;
-    html += `<div class="c-content-cell u-end"><p class="">Population: <b>${new Intl.NumberFormat(
+    html += `<div class="c-content-cell"><p class="u-textParagraphStart">Capital: <b>${jsonObject[0].capital}</b></p></div>`;
+    html += `<div class="c-content-cell u-end"><p class="u-textParagraphEnd">Population: <b>${new Intl.NumberFormat(
       'de-DE'
     ).format(jsonObject[0].population)}</b></p></div>`;
     // html += `<div class="c-content-cell"></div>`;
-    html += `<div class="c-content-cell"><p class="">Languages: <b>${languages}</b></p></div>`;
+    html += `<div class="c-content-cell"><p class="u-textParagraphStart">Languages: <b>${languages}</b></p></div>`;
     // html += `<div class="c-content-cell"></div>`;
-    html += `<div class="c-content-cell u-end"><p class="">Currencies: <b>${currencies}</b></p></div>`;
+    html += `<div class="c-content-cell u-end"><p class="u-textParagraphEnd">Currencies: <b>${currencies}</b></p></div>`;
     html += `<div class="c-content-cell u-justify-center u-x-span-2 js-chartText"><canvas class="myChart"></canvas></div></div>`;
 
     html += `<span class="material-icons c-close js-close">close</span>`;
   }
 
   htmlPopupContent.innerHTML = html;
+
+  var p = document.querySelectorAll('.u-textParagraphStart');
+  var l = document.querySelectorAll('.c-line-right');
+  for (let i = 0; i < p.length; i++) {
+    console.log(p[i].offsetHeight);
+    for (let j = 0; j < l.length; j++) {
+      if (p[i].offsetHeight > 19) {
+        l[i].style.height = `${p[i].offsetHeight}px`;
+      }
+      if (p[i].offsetHeight > 39) {
+        l[i].style.height = `${p[i].offsetHeight}px`;
+      }
+
+      if (p[i].offsetHeight > 59) {
+        l[i].style.height = `${p[i].offsetHeight}px`;
+      }
+    }
+  }
+
+  // if (document.querySelector('.test').textContent.length > 33) {
+  //   var test = document.querySelectorAll('.c-line-right');
+  //   for (let i = 0; i < test.length; i++) {
+  //     test[i].style.height = '2rem';
+  //   }
+  // }
 
   listenToClose();
   // google.charts.load('current', { packages: ['corechart', 'bar'] });
@@ -278,7 +307,11 @@ const listenToFilter = function () {
 const listenToClose = function () {
   htmlClose = document.querySelector('.js-close');
   htmlClose.addEventListener('click', function () {
-    document.querySelector('.js-popup').style.display = 'none';
+    document.querySelector('.js-popup-content').style.opacity = 0;
+    document.querySelector('.js-popup-content').style.transform = 'scale(0)';
+    window.setTimeout(function () {
+      document.querySelector('.js-popup').style.display = 'none';
+    }, 200); // timed to match animation-duration
   });
 };
 
