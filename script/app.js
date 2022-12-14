@@ -11,6 +11,54 @@ let globalWorldPopulation = 0;
 let showGraph = false;
 let chart;
 
+const showLandenFunction = function (jsonObject) {
+  htmlLand = document.querySelector('.js-canvas');
+  htmlLand.innerHTML = '';
+  document.querySelector('.loader').style.display = 'block';
+  window.setTimeout(function () {
+    document.querySelector('.loader').style.display = 'none';
+    globalCellCounter = 0;
+    let htmlCell = document.querySelector('.js-cell');
+
+    // console.log(test);
+    let html = '';
+    let htmlPng = '';
+    let teller = 1;
+
+    // Sort alfabetisch
+    jsonObject.sort(function (a, b) {
+      return a.ccn3 - b.ccn3;
+    });
+
+    for (let land of jsonObject) {
+      if (land.subregion == null) {
+        land.subregion = 'No subregion';
+      }
+      html += `<button class="c-btn-cell c-fade"><div class="cell cell--${teller} js-cell" name="${land.name.common}"><p class="c-cellText">${land.name.common}<p><img class="flag" src="${land.flags.png}" alt="Flag of ${land.name.common}"><p class="c-cellText--sub">${land.subregion}</p></div></button>`;
+      htmlPng = `url('${land.flags.png}')">`;
+      globalCellCounter = globalCellCounter + 1;
+      teller += 1;
+    }
+    htmlLand.innerHTML = html;
+    globalTeller = 0;
+    listenToClick();
+    showCounter();
+    fadeInLanden();
+  }, 500);
+};
+
+const fadeInLanden = function () {
+  var items = document.getElementsByClassName('c-fade');
+  for (let i = 0; i < items.length; ++i) {
+    fadeIn(items[i], i * 30);
+  }
+  function fadeIn(item, delay) {
+    setTimeout(() => {
+      item.classList.add('fadein');
+    }, delay);
+  }
+};
+
 const calculatePopulationSubRegion = function (jsonObject) {
   globalSubRegionCounter = 0;
   for (let land of jsonObject) {
@@ -38,34 +86,7 @@ const showCounter = function () {
 
 const showFilteredLanden = function (jsonObject) {
   try {
-    globalCellCounter = 0;
-    let htmlLand = document.querySelector('.js-canvas');
-    let htmlCell = document.querySelector('.js-cell');
-
-    // console.log(test);
-    let html = '';
-    let htmlPng = '';
-    let teller = 1;
-
-    // Sort alfabetisch
-    jsonObject.sort(function (a, b) {
-      return a.ccn3 - b.ccn3;
-    });
-
-    for (let land of jsonObject) {
-      if (land.subregion == null) {
-        land.subregion = 'No subregion';
-      }
-      html += `<button class="c-btn-cell"><div class="cell cell--${teller} js-cell" name="${land.name.common}"><p class="c-cellText">${land.name.common}<p><img class="flag" src="${land.flags.png}" alt="Flag of ${land.name.common}"><p class="c-cellText--sub">${land.subregion}</p></div></button>`;
-      htmlPng = `url('${land.flags.png}')">`;
-      globalCellCounter = globalCellCounter + 1;
-      teller += 1;
-    }
-    htmlLand.innerHTML = html;
-    globalTeller = 0;
-    listenToClick();
-    showCounter();
-
+    showLandenFunction(jsonObject);
     //Filters aanpassen
     let htmlFilters = document.querySelectorAll('.js-filter');
     for (let htmlFilter of htmlFilters) {
@@ -88,37 +109,19 @@ const showFilterChange = function (filter) {
   let htmlFilters = document.querySelectorAll('.js-filter');
   for (let htmlFilter of htmlFilters) {
     htmlFilter.classList.remove('u-is-selected');
+    document.querySelector('.js-search').value = '';
     if (htmlFilter.getAttribute('filter') == filter) {
+      htmlFilter.style.transform = 'scale(0.6)';
       htmlFilter.classList.add('u-is-selected');
     }
+    window.setTimeout(function () {
+      htmlFilter.style.transform = 'scale(1)';
+    }, 100);
   }
 };
 const showFilteredLandenByContinent = function (jsonObject) {
   try {
-    globalCellCounter = 0;
-    let htmlLand = document.querySelector('.js-canvas');
-    let htmlCell = document.querySelector('.js-cell');
-    let html = '';
-    let htmlPng = '';
-    let teller = 1;
-
-    // Sort alfabetisch
-    jsonObject.sort(function (a, b) {
-      return a.ccn3 - b.ccn3;
-    });
-
-    for (let land of jsonObject) {
-      if (land.subregion == null) {
-        land.subregion = 'No subregion';
-      }
-      html += `<button class="c-btn-cell"><div class="cell cell--${teller} js-cell" name="${land.name.common}"><p class="c-cellText">${land.name.common}<p><img class="flag" src="${land.flags.png}" alt="Flag of ${land.name.common}"><p class="c-cellText--sub">${land.subregion}</p></div></button>`;
-      htmlPng = `url('${land.flags.png}')">`;
-      teller += 1;
-      globalCellCounter = globalCellCounter + 1;
-    }
-    htmlLand.innerHTML = html;
-    listenToClick();
-    showCounter();
+    showLandenFunction(jsonObject);
     //Talen ophalen
     for (const [key, value] of Object.entries(jsonObject[25].languages)) {
       // console.log(value);
@@ -193,14 +196,14 @@ const showLand = function (jsonObject) {
     if (jsonObject[0].capital == null) {
       jsonObject[0].capital = 'No capital';
     }
-    html += `<div class="c-content-cell"><p class="u-textParagraphStart">Capital: <b>${jsonObject[0].capital}</b></p></div>`;
-    html += `<div class="c-content-cell u-end"><p class="u-textParagraphEnd">Population: <b>${new Intl.NumberFormat(
+    html += `<div class="c-content-cell"><p class="u-textParagraphStart">Capital:<br> <b>${jsonObject[0].capital}</b></p></div>`;
+    html += `<div class="c-content-cell u-end"><p class="u-textParagraphEnd">Population:<br>  <b>${new Intl.NumberFormat(
       'de-DE'
     ).format(jsonObject[0].population)}</b></p></div>`;
     // html += `<div class="c-content-cell"></div>`;
-    html += `<div class="c-content-cell"><p class="u-textParagraphStart">Languages: <b>${languages}</b></p></div>`;
+    html += `<div class="c-content-cell"><p class="u-textParagraphStart">Languages:<br>  <b>${languages}</b></p></div>`;
     // html += `<div class="c-content-cell"></div>`;
-    html += `<div class="c-content-cell u-end"><p class="u-textParagraphEnd">Currencies: <b>${currencies}</b></p></div>`;
+    html += `<div class="c-content-cell u-end"><p class="u-textParagraphEnd">Currencies:<br>  <b>${currencies}</b></p></div>`;
     html += `<div class="c-content-cell u-justify-center u-x-span-2 js-chartText"><canvas class="myChart"></canvas></div></div>`;
 
     html += `<span class="material-icons c-close js-close">close</span>`;
@@ -254,20 +257,7 @@ const showData = function (jsonObject) {
       return a.ccn3 - b.ccn3;
     });
 
-    for (let land of jsonObject) {
-      if (land.subregion == null) {
-        land.subregion = 'No subregion';
-      }
-      html += `<button class="c-btn-cell"><div class="cell cell--${teller} js-cell" name="${land.name.common}"><p class="c-cellText">${land.name.common}<p><img class="flag" src="${land.flags.png}" alt="Flag of ${land.name.common}"><p class="c-cellText--sub">${land.subregion}</p></div></button>`;
-      htmlPng = `url('${land.flags.png}')">`;
-      globalCellCounter = globalCellCounter + 1;
-      teller += 1;
-      globalWorldPopulation = globalWorldPopulation + land.population;
-    }
-    console.log(globalWorldPopulation);
-    htmlLand.innerHTML = html;
-    listenToClick();
-    showCounter();
+    showLandenFunction(jsonObject);
     //Talen ophalen
     for (const [key, value] of Object.entries(jsonObject[25].languages)) {
       // console.log(value);
@@ -332,6 +322,20 @@ const listenToClick = function () {
   }
 };
 
+const listenToMode = function () {
+  let mode = document.querySelector('.js-mode');
+  let root = document.querySelector(':root');
+  mode.addEventListener('click', function () {
+    if (mode.checked) {
+      root.style =
+        '--white: white;--dark: #212427;--text-color: white;--accent-color: #2badad;--btn-cell-color: #212121;--background-color: #141414;';
+    } else {
+      root.style =
+        '--white: white;--dark: #212427;--text-color: #212121;--accent-color: #2badad;--btn-cell-color: white;--background-color: white;';
+    }
+  });
+};
+
 const getPopulationSubRegion = function (subRegion) {
   let url = `https://restcountries.com/v3.1/subregion/${subRegion}`;
   handleData(url, calculatePopulationSubRegion);
@@ -372,63 +376,6 @@ const getData = function () {
   const url = 'https://restcountries.com/v3.1/all';
   handleData(url, showData);
 };
-
-// function drawBasic() {
-//   console.log(globalCountryCounter);
-//   // if (globalCountryCounter > 1000000000) {
-//   //   var data = google.visualization.arrayToDataTable([
-//   //     ['Global', 'Population'],
-//   //     ['Global', globalWorldPopulation],
-//   //     [`${globalRegion}`, globalRegionCounter],
-//   //     [`${globalSubRegion}`, globalSubRegionCounter],
-//   //     [`${globalCountryName}`, globalCountryCounter],
-//   //   ]);
-//   // } else {
-//   //   var data = google.visualization.arrayToDataTable([
-//   //     ['Global', 'Population'],
-//   //     // ['Global', globalWorldPopulation],
-//   //     [`${globalRegion}`, globalRegionCounter],
-//   //     [`${globalSubRegion}`, globalSubRegionCounter],
-//   //     [`${globalCountryName}`, globalCountryCounter],
-//   //   ]);
-//   // }
-//   // // var columnRange = data.getColumnRange(0);
-//   // var options = {
-//   //   title: `Population of ${globalCountryName} vs global population`,
-//   //   chartArea: { width: '55%' },
-//   //   hAxis: {
-//   //     title: 'Total Population',
-//   //     // viewWindow: {
-//   //     //   min: columnRange.min,
-//   //     // },
-//   //   },
-//   //   vAxis: {
-//   //     title: 'Country',
-//   //   },
-//   // };
-
-//   // var chart = new google.visualization.BarChart(
-//   //   document.getElementById('chart_div')
-//   // );
-
-//   var data = google.visualization.arrayToDataTable([
-//     ['Task', 'Hours per Day'],
-//     // ['Work', 11],
-//     [`${globalRegion}`, globalRegionCounter],
-//     [`${globalSubRegion}`, globalSubRegionCounter],
-//     [`${globalCountryName}`, globalCountryCounter],
-//   ]);
-
-//   var options = {
-//     title: 'My Daily Activities',
-//   };
-
-//   var chart = new google.visualization.PieChart(
-//     document.getElementById('chart_div')
-//   );
-
-//   chart.draw(data, options);
-// }
 
 const drawChart = function () {
   const ctx = document.querySelector('.myChart');
@@ -515,6 +462,7 @@ const init = function () {
   listenToFilter();
   listenToSearch();
   showCounter();
+  listenToMode();
 };
 document.addEventListener('DOMContentLoaded', init);
 //#endregion

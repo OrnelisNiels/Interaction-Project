@@ -1,12 +1,10 @@
 :root {
     --white: white;
-    --red: #DF2B1D;
-    --yellow: #F5CA41;
-    --blue: #1521A7;
     --dark: #212427;
+    --text-color: #212121;
     --accent-color: #2badad;
-
-    --background-color: whitesmoke;
+    --btn-cell-color: white;
+    --background-color: white;
 
     --shadow-color: 0deg 0% 0%;
     --shadow-elevation-low:
@@ -57,6 +55,12 @@
 html {
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
+
+}
+
+::selection{
+    background-color: var(--accent-color);
+    color: var(--white);
 }
 
 *,
@@ -68,6 +72,7 @@ html {
 body {
     margin:0px;
     color: var(--dark);
+    background-color: var(--background-color);
 }
 
 .c-collection{
@@ -178,6 +183,7 @@ button.c-btn:focus{
     grid-template-rows: auto auto auto auto; */
     /* box-shadow: var(--shadow-elevation-medium) */
     gap: 30px;
+    position: relative;
 }
 
 .cell {
@@ -217,7 +223,7 @@ button.c-btn:focus{
     right: center;
     bottom: 50px;
     font-size: 25px;
-    color:var(--dark);
+    color:var(--text-color);
 }
 
 .c-cellText--sub{
@@ -226,7 +232,7 @@ button.c-btn:focus{
     right: center;
     bottom: 40px;
     font-size: 14px;
-    color:var(--dark);
+    color:var(--text-color);
 }
 
 .c-popup{
@@ -282,6 +288,27 @@ button.c-btn:focus{
     min-height: 90px;
 }
 
+.c-content-cell::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+.c-content-cell::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 50px;
+}
+
+/* Handle */
+.c-content-cell::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 50px;
+}
+
+/* Handle on hover */
+.c-content-cell::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 
 .c-chart{
     width: 100%;
@@ -311,11 +338,13 @@ button.c-btn-continent:focus{
 button{
     border: none;
     padding: 2px 10px;
+    margin-right: 5px;
+    border-radius: 50px;
     background-color: transparent;
     cursor: pointer;
     font-size: inherit;
-    border-radius: 50px;
     font-family: 'Montserrat', sans-serif;
+    color: var(--text-color);
 }
 button:hover{
     background-color: var(--accent-color);;
@@ -325,6 +354,7 @@ button:hover{
 
 
 .c-btn-cell{
+    background-color: var(--btn-cell-color);
     border-radius: 20px;
     padding: 0px;
 }
@@ -334,14 +364,67 @@ button.c-btn-cell:hover {
     transform: scale(1.05);
     background-color: transparent;
     color: var(--dark);
-}
+} 
 
 button.c-btn-cell:focus{
     transform: scale(1.05);
     outline: none;
 }
+.loader {
+    display: none;
+    z-index: 100;
+    position: absolute;
+    top: 50%;
+    left: center;
+    border: 16px solid transparent;
+    border-radius: 50%;
+    border-top: 16px solid var(--accent-color);
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 1s ease-in-out infinite;
+    /* Safari */
+    animation: spin 1s ease-in-out infinite;
+}
+/* Safari */
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
 
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
 
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.c-fade{
+    transition: 0.1s all ease-in-out;
+    opacity: 0;
+}
+
+.fadein {
+    animation: fadeIn 0.9s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
 @media (min-width: 320px) {
     .c-container {
             width: 100vw;
@@ -349,7 +432,7 @@ button.c-btn-cell:focus{
         }
 
      .c-head{
-        margin: 50px 0px;
+        margin: 25px 0px 50px 0px ;
      }    
 
      .flag{
@@ -429,6 +512,82 @@ button.c-btn-cell:focus{
 
     .c-klein {
         display: none;
+    }
+    .toggle-checkbox {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .toggle-slot {
+        position: relative;
+        height: 2rem;
+        width: 4rem;
+        margin-top: 1rem;
+        /* border: 2px solid var(--dark); */
+        border-radius: 10rem;
+        background-color: var(--white);
+        box-shadow:  0 0 4px rgba(0, 0, 0, 0.136), 0 2px 8px rgba(0, 0, 0, 0.168);
+        transition: background-color 250ms;
+    }
+
+    .toggle-checkbox:checked~.toggle-slot {
+        background-color: var(--dark);
+    }
+
+    .toggle-button {
+        transform: translate(2.5rem, 0.5rem);
+        position: absolute;
+        height: 1rem;
+        width: 1rem;
+        border-radius: 50%;
+        box-shadow: inset 0px 0px 0px 0.75rem var(--accent-color);
+        transition: background-color 250ms, border-color 250ms, transform 150ms cubic-bezier(.26, 2, .46, .71);
+    }
+
+    .toggle-checkbox:checked~.toggle-slot .toggle-button {
+        box-shadow: inset 0px 0px 0px 0.75em var(--accent-color);
+        transform: translate(0.4rem, 0.5rem);        
+    }
+
+    .sun-icon {
+        position: absolute;
+        height: 1rem;
+        width: 1rem;
+        color: var(--accent-color);
+    }
+
+    .sun-icon-wrapper {
+        position: absolute;
+        height: 1rem;
+        width: 1rem;
+        opacity: 1;
+        transform: translate(0.4rem, 0.52rem) rotate(0deg);
+    }
+
+    .toggle-checkbox:checked~.toggle-slot .sun-icon-wrapper {
+        opacity: 0;
+        transform: translate(2.5em, 0.5rem) rotate(0deg);
+    }
+
+    .moon-icon {
+        position: absolute;
+        height: 1rem;
+        width: 1rem;
+        color: var(--accent-color);
+    }
+
+    .moon-icon-wrapper {
+        position: absolute;
+        height: 1rem;
+        width: 1rem;
+        opacity: 0;
+        transform-origin: 50% 50%;
+    }
+
+    .toggle-checkbox:checked~.toggle-slot .moon-icon-wrapper {
+        opacity: 1;
+        transform: translate(2.5em, 0.5rem);
     }
 }
 
@@ -661,6 +820,8 @@ button.c-btn-cell:focus{
 .u-is-selected{
     background-color: var(--accent-color);;
     color: white;
+    transform: scale(1.0);
+    transition: .2s ease transform;
 }
 
 .u-textParagraphStart{
@@ -669,4 +830,8 @@ button.c-btn-cell:focus{
 
 .u-textParagraphEnd{
     text-align: end;
+}
+
+.u-radius-50{
+    border-radius: 50px;
 }

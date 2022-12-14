@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project</title>
+    <link rel="icon" type="image/x-icon" href="Assets/favicon.ico" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,6 +17,7 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
+    <script src="https://code.iconify.design/1/1.0.4/iconify.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script
       type="text/javascript"
@@ -27,6 +29,19 @@
   <body>
     <div class="c-klein js-klein" id="false"></div>
     <div class="c-collection js-page">
+      <label>
+  <input class='toggle-checkbox js-mode' type='checkbox'></input>
+    <div class='toggle-slot'>
+      <div class='sun-icon-wrapper'>
+        <div class="iconify sun-icon" data-icon="feather-sun" data-inline="false"></div>
+      </div>
+      <div class='toggle-button'></div>
+      <div class='moon-icon-wrapper'>
+        <div class="iconify moon-icon" data-icon="feather-moon" data-inline="false"></div>
+      </div>
+    </div>
+  </label>
+      <div class="loader"></div>
       <div class="c-head">
         <div class="c-search-container">
           <input
@@ -64,7 +79,7 @@
       </div>
       <div class="c-container">
         <div class="canvas js-canvas">
-          <div class="cell cell--1 js-cell"></div>
+          <!-- <div class="cell cell--1 js-cell"></div> -->
         </div>
       </div>
     </div>
