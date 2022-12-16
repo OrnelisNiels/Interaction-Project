@@ -10,6 +10,8 @@ let globalCountryCounter = 0;
 let globalWorldPopulation = 0;
 let showGraph = false;
 let chart;
+let dark = false;
+let displayBool;
 
 const showLandenFunction = function (jsonObject) {
   htmlLand = document.querySelector('.js-canvas');
@@ -29,10 +31,22 @@ const showLandenFunction = function (jsonObject) {
     jsonObject.sort(function (a, b) {
       return a.ccn3 - b.ccn3;
     });
-
     for (let land of jsonObject) {
       if (land.subregion == null) {
         land.subregion = 'No subregion';
+      }
+      if (window.innerWidth <= 1200) {
+        if (land.name.common.length > 19) {
+          land.name.common = land.name.common.substring(0, 19) + '...';
+        }
+      }
+      if (window.innerWidth < 1600 && window.innerWidth > 1200) {
+        if (land.name.common.length > 25) {
+          land.name.common = land.name.common.substring(0, 25) + '...';
+        }
+      }
+      if (window.innerWidth >= 1600) {
+        land.name.common = land.name.common;
       }
       html += `<button class="c-btn-cell c-fade"><div class="cell cell--${teller} js-cell" name="${land.name.common}"><p class="c-cellText">${land.name.common}<p><img class="flag" src="${land.flags.png}" alt="Flag of ${land.name.common}"><p class="c-cellText--sub">${land.subregion}</p></div></button>`;
       htmlPng = `url('${land.flags.png}')">`;
@@ -64,7 +78,6 @@ const calculatePopulationSubRegion = function (jsonObject) {
   for (let land of jsonObject) {
     globalSubRegionCounter = globalSubRegionCounter + land.population;
   }
-  console.log(globalSubRegionCounter);
 };
 
 const calculatePopulationRegion = function (jsonObject, region) {
@@ -72,16 +85,23 @@ const calculatePopulationRegion = function (jsonObject, region) {
   for (let land of jsonObject) {
     globalRegionCounter = globalRegionCounter + land.population;
   }
-  console.log(globalRegionCounter);
   showGraph = true;
   if (showGraph == true) {
     drawChart();
   }
 };
 
+const calculateWorldPopulation = function (jsonObject) {
+  globalWorldPopulation = 0;
+  for (let land of jsonObject) {
+    globalWorldPopulation = globalWorldPopulation + land.population;
+  }
+  // console.log(globalWorldPopulation);
+};
+
 const showCounter = function () {
   let htmlCounter = document.querySelector('.js-counter');
-  htmlCounter.innerHTML = `Countries: <b>${globalCellCounter}</b>`;
+  htmlCounter.innerHTML = `Countries: <b class="c-b-counter">${globalCellCounter}</b>`;
 };
 
 const showFilteredLanden = function (jsonObject) {
@@ -307,19 +327,33 @@ const listenToClose = function () {
 
 const listenToClick = function () {
   let cells = document.querySelectorAll('.js-cell');
-  // console.log(cells);
-  for (let button of cells) {
-    button.addEventListener('click', function () {
-      let land = button.getAttribute('name');
+  let btnLand = document.querySelectorAll('.c-btn-cell');
+  for (let btn of btnLand) {
+    btn.addEventListener('click', function () {
+      let land = btn.querySelector('.js-cell').getAttribute('name');
       getLand(land);
     });
-    button.addEventListener('keypress', function (event) {
+    btn.addEventListener('keypress', function () {
       if (event.key == 'Enter') {
-        let land = button.getAttribute('name');
+        let land = btn.querySelector('.js-cell').getAttribute('name');
         getLand(land);
       }
     });
   }
+  // for (let button of cells) {
+  //   button.addEventListener('click', function () {
+  //     console.log('#################################################');
+  //     let land = button.getAttribute('name');
+  //     getLand(land);
+  //   });
+  //   button.addEventListener('keypress', function (event) {
+  //     if (event.key == 'Enter') {
+  //       console.log('#################################################');
+  //       let land = button.getAttribute('name');
+  //       getLand(land);
+  //     }
+  //   });
+  // }
 };
 
 const listenToMode = function () {
@@ -327,11 +361,17 @@ const listenToMode = function () {
   let root = document.querySelector(':root');
   mode.addEventListener('click', function () {
     if (mode.checked) {
+      dark = true;
+      Chart.defaults.color = 'white';
+      Chart.defaults.borderColor = 'rgba(255,	255,	255, 0.4)';
       root.style =
-        '--white: white;--dark: #212427;--text-color: white;--accent-color: #2badad;--btn-cell-color: #212121;--background-color: #141414;';
+        '--white: white;--dark: #212427;--text-color: white;--accent-color: #2badad;--btn-cell-color: #212121;--background-color: #141414; --bold-text-color: #2badad; --scrollbarTrack-color: #212427; --popupcontent-color: #212427; --searchBar-color: #2badad; --hover-color: #00ffff;';
     } else {
+      dark = false;
+      Chart.defaults.color = '#212427';
+      Chart.defaults.borderColor = 'rgba(0,	0,	0, 0.1)';
       root.style =
-        '--white: white;--dark: #212427;--text-color: #212121;--accent-color: #2badad;--btn-cell-color: white;--background-color: white;';
+        '--white: white;--dark: #212427;--text-color: #212427;--accent-color: #2badad;--btn-cell-color: white;--background-color: white; --bold-text-color: #2badad; --scrollbarTrack-color: #f1f1f1; --popupcontent-color: white; --searchBar-color: #212427; --hover-color: #2badad;';
     }
   });
 };
@@ -344,6 +384,11 @@ const getPopulationSubRegion = function (subRegion) {
 const getPopulationRegion = function (region) {
   let url = `https://restcountries.com/v3.1/region/${region}`;
   handleData(url, calculatePopulationRegion);
+};
+
+const getWorldPopulation = function () {
+  let url = `https://restcountries.com/v3.1/all`;
+  handleData(url, calculateWorldPopulation);
 };
 
 const getFilteredLanden = function (search) {
@@ -380,77 +425,224 @@ const getData = function () {
 const drawChart = function () {
   const ctx = document.querySelector('.myChart');
   const ctxText = document.querySelector('.js-chartText');
-  console.log(globalSubRegion);
+  console.log(globalWorldPopulation);
   if (globalSubRegion != undefined) {
     if (globalCountryCounter > 300000000) {
-      chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: [
-            `${globalCountryName}`,
-            `${globalSubRegion}`,
-            `${globalRegion}`,
-            `Global population`,
-          ],
-          datasets: [
-            {
-              label: 'Population',
-              data: [
-                globalCountryCounter,
-                globalSubRegionCounter,
-                globalRegionCounter,
-                globalWorldPopulation,
-              ],
-              borderWidth: 1,
-              backgroundColor: 'rgba(43,	173,	173, 0.5)',
+      if (window.innerWidth >= 768) {
+        displayBool = true;
+      } else {
+        displayBool = false;
+      }
+      if (dark == false) {
+        chart = new Chart(ctx, {
+          type: 'bar',
+          options: {
+            scales: {
+              y: {
+                ticks: {
+                  display: displayBool,
+                },
+              },
             },
-          ],
-        },
-      });
+          },
+          data: {
+            labels: [
+              `${globalCountryName}`,
+              `${globalSubRegion}`,
+              `${globalRegion}`,
+              `Global population`,
+            ],
+            datasets: [
+              {
+                label: 'Population',
+                data: [
+                  globalCountryCounter,
+                  globalSubRegionCounter,
+                  globalRegionCounter,
+                  globalWorldPopulation,
+                ],
+                borderWidth: 1,
+                backgroundColor: 'rgba(43,	173,	173, 0.5)',
+              },
+            ],
+          },
+        });
+      }
+      if (dark == true) {
+        chart = new Chart(ctx, {
+          type: 'bar',
+          options: {
+            scales: {
+              y: {
+                ticks: {
+                  display: displayBool,
+                },
+              },
+            },
+          },
+          data: {
+            labels: [
+              `${globalCountryName}`,
+              `${globalSubRegion}`,
+              `${globalRegion}`,
+              `Global population`,
+            ],
+            datasets: [
+              {
+                label: 'Population',
+                data: [
+                  globalCountryCounter,
+                  globalSubRegionCounter,
+                  globalRegionCounter,
+                  globalWorldPopulation,
+                ],
+                borderWidth: 1,
+                backgroundColor: 'rgba(43,	173,	173, 1)',
+              },
+            ],
+          },
+        });
+      }
     } else if (globalCountryName.split(' ').length > 2) {
-      chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: [`Country`, `${globalSubRegion}`, `${globalRegion}`],
-          datasets: [
-            {
-              label: 'Population',
-              data: [
-                globalCountryCounter,
-                globalSubRegionCounter,
-                globalRegionCounter,
-              ],
-              borderWidth: 1,
-              minBarLength: 3,
-              backgroundColor: 'rgba(43,	173,	173, 0.5)',
+      if (window.innerWidth >= 768) {
+        displayBool = true;
+      } else {
+        displayBool = false;
+      }
+      if (dark == false) {
+        chart = new Chart(ctx, {
+          type: 'bar',
+          options: {
+            scales: {
+              y: {
+                ticks: {
+                  display: displayBool,
+                },
+              },
             },
-          ],
-        },
-      });
+          },
+          data: {
+            labels: [`Country`, `${globalSubRegion}`, `${globalRegion}`],
+            datasets: [
+              {
+                label: 'Population',
+                data: [
+                  globalCountryCounter,
+                  globalSubRegionCounter,
+                  globalRegionCounter,
+                ],
+                borderWidth: 1,
+                minBarLength: 3,
+                backgroundColor: 'rgba(43,	173,	173, 0.5)',
+              },
+            ],
+          },
+        });
+      }
+      if (dark == true) {
+        chart = new Chart(ctx, {
+          type: 'bar',
+          options: {
+            scales: {
+              y: {
+                ticks: {
+                  display: displayBool,
+                },
+              },
+            },
+          },
+          data: {
+            labels: [`Country`, `${globalSubRegion}`, `${globalRegion}`],
+            datasets: [
+              {
+                label: 'Population',
+                data: [
+                  globalCountryCounter,
+                  globalSubRegionCounter,
+                  globalRegionCounter,
+                ],
+                borderWidth: 1,
+                minBarLength: 3,
+                backgroundColor: 'rgba(43,	173,	173, 1)',
+              },
+            ],
+          },
+        });
+      }
     } else {
-      chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: [
-            `${globalCountryName}`,
-            `${globalSubRegion}`,
-            `${globalRegion}`,
-          ],
-          datasets: [
-            {
-              label: 'Population',
-              data: [
-                globalCountryCounter,
-                globalSubRegionCounter,
-                globalRegionCounter,
-              ],
-              borderWidth: 1,
-              minBarLength: 3,
-              backgroundColor: 'rgba(43,	173,	173, 0.5)',
+      if (window.innerWidth >= 768) {
+        displayBool = true;
+      } else {
+        displayBool = false;
+      }
+      if (dark == false) {
+        chart = new Chart(ctx, {
+          type: 'bar',
+          options: {
+            scales: {
+              y: {
+                ticks: {
+                  display: displayBool,
+                },
+              },
             },
-          ],
-        },
-      });
+          },
+          data: {
+            labels: [
+              `${globalCountryName}`,
+              `${globalSubRegion}`,
+              `${globalRegion}`,
+            ],
+            datasets: [
+              {
+                label: 'Population',
+                data: [
+                  globalCountryCounter,
+                  globalSubRegionCounter,
+                  globalRegionCounter,
+                ],
+                borderWidth: 1,
+                minBarLength: 3,
+                backgroundColor: 'rgba(43,	173,	173, 0.5)',
+              },
+            ],
+          },
+        });
+      }
+      if (dark == true) {
+        chart = new Chart(ctx, {
+          type: 'bar',
+          options: {
+            scales: {
+              y: {
+                ticks: {
+                  display: displayBool,
+                },
+              },
+            },
+          },
+          data: {
+            labels: [
+              `${globalCountryName}`,
+              `${globalSubRegion}`,
+              `${globalRegion}`,
+            ],
+            datasets: [
+              {
+                label: 'Population',
+                data: [
+                  globalCountryCounter,
+                  globalSubRegionCounter,
+                  globalRegionCounter,
+                ],
+                borderWidth: 1,
+                minBarLength: 3,
+                backgroundColor: 'rgba(43,	173,	173, 1)',
+              },
+            ],
+          },
+        });
+      }
     }
   } else {
     ctxText.innerHTML = 'No data available';
@@ -463,6 +655,8 @@ const init = function () {
   listenToSearch();
   showCounter();
   listenToMode();
+  getWorldPopulation();
+  Chart.defaults.borderColor = 'rgba(0,	0,	0, 0.1)';
 };
 document.addEventListener('DOMContentLoaded', init);
 //#endregion
