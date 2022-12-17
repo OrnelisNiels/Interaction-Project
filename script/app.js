@@ -167,22 +167,33 @@ const showLand = function (jsonObject) {
   let html = '';
   let languages = '';
   let currencies = '';
+  let teller = 0;
+  let tellerCur = 0;
 
   if (jsonObject[0].languages == null) {
     languages = 'No languages found';
   } else {
     for (const [key, value] of Object.entries(jsonObject[0].languages)) {
-      languages += `${value} / `;
+      teller += 1;
+      languages += `${value}+`;
       // console.log(languages);
     }
+    if (teller > 1) {
+      languages = languages.replaceAll('+', ', ');
+    }
+    languages = languages.substring(0, languages.length - 2);
   }
   if (jsonObject[0].currencies == null) {
     currencies = 'No currencies found';
   } else {
     for (const [key, value] of Object.entries(jsonObject[0].currencies)) {
-      // console.log(value);
-      currencies += `${value.name} (${value.symbol}) `;
+      tellerCur += 1;
+      currencies += `${value.name} (${value.symbol}) +`;
     }
+    if (tellerCur > 1) {
+      currencies = currencies.replaceAll('+', ', ');
+    }
+    currencies = currencies.substring(0, currencies.length - 2);
   }
 
   globalCountryName = jsonObject[0].name.common;
@@ -315,6 +326,15 @@ const listenToClose = function () {
       document.querySelector('.js-popup').style.display = 'none';
     }, 200); // timed to match animation-duration
   });
+  window.addEventListener('keydown', function (event) {
+    if (event.key == 'Escape') {
+      document.querySelector('.js-popup-content').style.opacity = 0;
+      document.querySelector('.js-popup-content').style.transform = 'scale(0)';
+      window.setTimeout(function () {
+        document.querySelector('.js-popup').style.display = 'none';
+      }, 200); // timed to match animation-duration
+    }
+  });
 };
 
 const listenToClick = function () {
@@ -336,8 +356,17 @@ const listenToClick = function () {
 
 const listenToMode = function () {
   let mode = document.querySelector('.js-mode');
+  let btn = document.querySelector('.c-btn-dark');
   let root = document.querySelector(':root');
-  mode.addEventListener('click', function () {
+  let teller = 0;
+  btn.addEventListener('click', function () {
+    teller += 1;
+    if (teller == 1) {
+      mode.checked = true;
+    } else {
+      mode.checked = false;
+      teller = 0;
+    }
     if (mode.checked) {
       dark = true;
       Chart.defaults.color = 'white';
@@ -352,6 +381,21 @@ const listenToMode = function () {
         '--white: white;--dark: #212427;--text-color: #212427;--accent-color: #2badad;--btn-cell-color: white;--background-color: white; --bold-text-color: #2badad; --scrollbarTrack-color: #f1f1f1; --popupcontent-color: white; --searchBar-color: #212427; --hover-color: #2badad;';
     }
   });
+  // mode.addEventListener('click', function () {
+  //   if (mode.checked) {
+  //     dark = true;
+  //     Chart.defaults.color = 'white';
+  //     Chart.defaults.borderColor = 'rgba(255,	255,	255, 0.2)';
+  //     root.style =
+  //       '--white: white;--dark: #212427;--text-color: white;--accent-color: #2badad;--btn-cell-color: #212121;--background-color: #141414; --bold-text-color: #2badad; --scrollbarTrack-color: #212427; --popupcontent-color: #212427; --searchBar-color: #2badad; --hover-color: #00ffff;';
+  //   } else {
+  //     dark = false;
+  //     Chart.defaults.color = '#212427';
+  //     Chart.defaults.borderColor = 'rgba(0,	0,	0, 0.1)';
+  //     root.style =
+  //       '--white: white;--dark: #212427;--text-color: #212427;--accent-color: #2badad;--btn-cell-color: white;--background-color: white; --bold-text-color: #2badad; --scrollbarTrack-color: #f1f1f1; --popupcontent-color: white; --searchBar-color: #212427; --hover-color: #2badad;';
+  //   }
+  // });
 };
 
 const getPopulationSubRegion = function (subRegion) {
