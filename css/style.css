@@ -282,7 +282,7 @@ button.c-btn:focus{
 
 .c-land-name{
     font-size: 30px;
-    margin: 0px;
+    margin: 0px 30px
 }
 
 .c-content-cell {
@@ -299,13 +299,13 @@ button.c-btn:focus{
 
 /* Track */
 .c-content-cell::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--scrollbarTrack-color);
     border-radius: 50px;
 }
 
 /* Handle */
 .c-content-cell::-webkit-scrollbar-thumb {
-    background: #888;
+    background: var(--accent-color);
     border-radius: 50px;
 }
 
@@ -438,7 +438,7 @@ button.c-btn-cell:focus{
 
 @media (min-width: 320px) {
     .c-content-cell {
-        min-height: 135px;
+        min-height: auto;
     }
     .c-container {
             width: 100vw;
@@ -505,7 +505,7 @@ button.c-btn-cell:focus{
 
     .c-popup-content {
         width: 90vw;
-        height: 50vh;
+        height:max-content;
         border-radius: 10px;
         text-align: center;
         padding: 10px;
@@ -646,7 +646,7 @@ button.c-btn-cell:focus{
 
 @media (min-width: 768px) {
     .c-content-cell {
-            min-height: 90px;
+            min-height: auto;
         }
     .canvas {
         grid-template-columns: 1fr 1fr 1fr;
@@ -780,6 +780,9 @@ button.c-btn-cell:focus{
     .c-head-container {
         width: 89vw;
     }
+    .c-land-name {
+        margin: 0px;
+    }
 }
 
 @media (min-width: 1600px) {
@@ -892,4 +895,8 @@ button.c-btn-cell:focus{
 
 .u-radius-50{
     border-radius: 50px;
+}
+
+.u-max-height-135{
+    max-height: 135px;
 }

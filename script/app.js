@@ -12,7 +12,7 @@ let showGraph = false;
 let chart;
 let dark = false;
 let displayBool;
-
+let textContentLand;
 const showLandenFunction = function (jsonObject) {
   htmlLand = document.querySelector('.js-canvas');
   htmlLand.innerHTML = '';
@@ -21,7 +21,6 @@ const showLandenFunction = function (jsonObject) {
     document.querySelector('.loader').style.display = 'none';
     globalCellCounter = 0;
     let htmlCell = document.querySelector('.js-cell');
-
     // console.log(test);
     let html = '';
     let htmlPng = '';
@@ -32,23 +31,24 @@ const showLandenFunction = function (jsonObject) {
       return a.ccn3 - b.ccn3;
     });
     for (let land of jsonObject) {
+      textContentLand = land.name.common;
       if (land.subregion == null) {
         land.subregion = 'No subregion';
       }
       if (window.innerWidth <= 1200) {
         if (land.name.common.length > 19) {
-          land.name.common = land.name.common.substring(0, 19) + '...';
+          textContentLand = land.name.common.substring(0, 19) + '...';
         }
       }
       if (window.innerWidth < 1600 && window.innerWidth > 1200) {
         if (land.name.common.length > 25) {
-          land.name.common = land.name.common.substring(0, 25) + '...';
+          textContentLand = land.name.common.substring(0, 25) + '...';
         }
       }
       if (window.innerWidth >= 1600) {
-        land.name.common = land.name.common;
+        textContentLand = land.name.common;
       }
-      html += `<button class="c-btn-cell c-fade"><div class="cell cell--${teller} js-cell" name="${land.name.common}"><p class="c-cellText">${land.name.common}<p><img class="flag" src="${land.flags.png}" alt="Flag of ${land.name.common}"><p class="c-cellText--sub">${land.subregion}</p></div></button>`;
+      html += `<button class="c-btn-cell c-fade"><div class="cell cell--${teller} js-cell" name="${land.name.common}"><p class="c-cellText">${textContentLand}<p><img class="flag" src="${land.flags.png}" alt="Flag of ${textContentLand}"><p class="c-cellText--sub">${land.subregion}</p></div></button>`;
       htmlPng = `url('${land.flags.png}')">`;
       globalCellCounter = globalCellCounter + 1;
       teller += 1;
@@ -78,6 +78,8 @@ const calculatePopulationSubRegion = function (jsonObject) {
   for (let land of jsonObject) {
     globalSubRegionCounter = globalSubRegionCounter + land.population;
   }
+  // console.warn(globalSubRegionCounter);
+  showGraph = true;
 };
 
 const calculatePopulationRegion = function (jsonObject, region) {
@@ -85,7 +87,6 @@ const calculatePopulationRegion = function (jsonObject, region) {
   for (let land of jsonObject) {
     globalRegionCounter = globalRegionCounter + land.population;
   }
-  showGraph = true;
   if (showGraph == true) {
     drawChart();
   }
@@ -221,9 +222,9 @@ const showLand = function (jsonObject) {
       'de-DE'
     ).format(jsonObject[0].population)}</b></p></div>`;
     // html += `<div class="c-content-cell"></div>`;
-    html += `<div class="c-content-cell"><p class="u-textParagraphStart">Languages:<br>  <b>${languages}</b></p></div>`;
+    html += `<div class="c-content-cell u-max-height-135"><p class="u-textParagraphStart">Languages:<br>  <b>${languages}</b></p></div>`;
     // html += `<div class="c-content-cell"></div>`;
-    html += `<div class="c-content-cell u-end"><p class="u-textParagraphEnd">Currencies:<br>  <b>${currencies}</b></p></div>`;
+    html += `<div class="c-content-cell u-end u-max-height-135"><p class="u-textParagraphEnd">Currencies:<br>  <b>${currencies}</b></p></div>`;
     html += `<div class="c-content-cell u-justify-center u-x-span-2 js-chartText"><canvas class="myChart"></canvas></div></div>`;
 
     html += `<span class="material-icons c-close js-close">close</span>`;
@@ -249,16 +250,7 @@ const showLand = function (jsonObject) {
     }
   }
 
-  // if (document.querySelector('.test').textContent.length > 33) {
-  //   var test = document.querySelectorAll('.c-line-right');
-  //   for (let i = 0; i < test.length; i++) {
-  //     test[i].style.height = '2rem';
-  //   }
-  // }
-
   listenToClose();
-  // google.charts.load('current', { packages: ['corechart', 'bar'] });
-  // google.charts.setOnLoadCallback(drawBasic);
 };
 
 const showData = function (jsonObject) {
@@ -340,20 +332,6 @@ const listenToClick = function () {
       }
     });
   }
-  // for (let button of cells) {
-  //   button.addEventListener('click', function () {
-  //     console.log('#################################################');
-  //     let land = button.getAttribute('name');
-  //     getLand(land);
-  //   });
-  //   button.addEventListener('keypress', function (event) {
-  //     if (event.key == 'Enter') {
-  //       console.log('#################################################');
-  //       let land = button.getAttribute('name');
-  //       getLand(land);
-  //     }
-  //   });
-  // }
 };
 
 const listenToMode = function () {
@@ -363,7 +341,7 @@ const listenToMode = function () {
     if (mode.checked) {
       dark = true;
       Chart.defaults.color = 'white';
-      Chart.defaults.borderColor = 'rgba(255,	255,	255, 0.4)';
+      Chart.defaults.borderColor = 'rgba(255,	255,	255, 0.2)';
       root.style =
         '--white: white;--dark: #212427;--text-color: white;--accent-color: #2badad;--btn-cell-color: #212121;--background-color: #141414; --bold-text-color: #2badad; --scrollbarTrack-color: #212427; --popupcontent-color: #212427; --searchBar-color: #2badad; --hover-color: #00ffff;';
     } else {
@@ -425,7 +403,6 @@ const getData = function () {
 const drawChart = function () {
   const ctx = document.querySelector('.myChart');
   const ctxText = document.querySelector('.js-chartText');
-  console.log(globalWorldPopulation);
   if (globalSubRegion != undefined) {
     if (globalCountryCounter > 300000000) {
       if (window.innerWidth >= 768) {
@@ -637,7 +614,7 @@ const drawChart = function () {
                 ],
                 borderWidth: 1,
                 minBarLength: 3,
-                backgroundColor: 'rgba(43,	173,	173, 1)',
+                backgroundColor: 'rgba(0,	255,	255, 0.6)',
               },
             ],
           },
