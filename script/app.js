@@ -107,6 +107,7 @@ const showCounter = function () {
 
 const showFilteredLanden = function (jsonObject) {
   try {
+    document.querySelector('.js-message').innerHTML = '';
     showLandenFunction(jsonObject);
     //Filters aanpassen
     let htmlFilters = document.querySelectorAll('.js-filter');
@@ -119,9 +120,10 @@ const showFilteredLanden = function (jsonObject) {
 };
 
 const showError = function (message) {
+  let htmlMessage = document.querySelector('.js-message');
   globalTeller = globalTeller + 1;
   if (globalTeller == 3) {
-    alert('Kan niets vinden');
+    htmlMessage.innerHTML = 'Kan resultaat niet vinden';
     globalTeller = 0;
   }
 };
@@ -180,8 +182,10 @@ const showLand = function (jsonObject) {
     }
     if (teller > 1) {
       languages = languages.replaceAll('+', ', ');
+      languages = languages.substring(0, languages.length - 2);
+    } else {
+      languages = languages.substring(0, languages.length - 1);
     }
-    languages = languages.substring(0, languages.length - 2);
   }
   if (jsonObject[0].currencies == null) {
     currencies = 'No currencies found';
@@ -192,8 +196,10 @@ const showLand = function (jsonObject) {
     }
     if (tellerCur > 1) {
       currencies = currencies.replaceAll('+', ', ');
+      currencies = currencies.substring(0, currencies.length - 2);
+    } else {
+      currencies = currencies.substring(0, currencies.length - 1);
     }
-    currencies = currencies.substring(0, currencies.length - 2);
   }
 
   globalCountryName = jsonObject[0].name.common;
