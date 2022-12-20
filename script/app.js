@@ -144,6 +144,7 @@ const showFilterChange = function (filter) {
 };
 const showFilteredLandenByContinent = function (jsonObject) {
   try {
+    document.querySelector('.js-message').innerHTML = '';
     showLandenFunction(jsonObject);
     //Talen ophalen
     for (const [key, value] of Object.entries(jsonObject[25].languages)) {
